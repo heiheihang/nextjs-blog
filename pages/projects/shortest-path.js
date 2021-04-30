@@ -4,16 +4,33 @@ import Head from 'next/head'
 
 import styles from '../../components/grid.module.css'
 
-function ColorBox({ state }) {
-    if (state == 0) {
-        return <div className={styles.normal}></div>
-    } else if (state == 1) {
-        return <div className={styles.hole}></div>
+const arraySize = 10
+
+function depthFirstSearch(mat) {
+    const stack = []
+    stack.push([0,0,[[0,0]]])
+    while(stack.length > 0) {
+        let [row, col, path] = stack.pop()
+        if(mat[row][col] == 3) {
+            return path
+        }
+        if(mat[row][col] == 1) {
+            continue
+        }
+        if(row < arraySize - 1) {
+            let path1 = path.slice()
+            path1.push([row+1, col])
+            stack.push([row + 1, col, path1])
+        }
+        if(col < arraySize - 1) {
+            let path2 = path.slice()
+            path2.push([row, col+1])
+            stack.push([row, col + 1, path2 ])
+        }
     }
 }
 
 export default function Path() {
-    const arraySize = 10
     const startingMatrix = new Array(arraySize).fill(0).map(() => new Array(arraySize).fill(0))
     startingMatrix[0][0] = 2
     startingMatrix[arraySize - 1][arraySize - 1] = 3
@@ -21,7 +38,6 @@ export default function Path() {
 
     function Box({ state, row, col }) {
         const [boxState, setBoxState] = useState(state)
-        //console.log(boxState)
         if (boxState == 0) {   //default state
             return <div onClick={() => {
                 setBoxState(1)
@@ -40,17 +56,29 @@ export default function Path() {
             return <div className={styles.start}></div>
         } else if (boxState == 3) {   //end
             return <div className={styles.end}></div>
+        } else if(boxState == 4) {
+            return <div className={styles.path}></div>
         }
     }
 
     function ResetButton() {
-        return <button onClick={() => setGrid(startingMatrix)}>
+        return <button onClick={() =>{
+            setGrid(startingMatrix)
+        } }>
             Reset
         </button>
     }
 
     function FindPathButton() {
-        return <button onClick={() => console.log(grid)}>
+        return <button onClick={() =>{
+            let path = depthFirstSearch(grid)
+            let newGrid = grid.map(row => row.slice()) 
+            
+            path.forEach(([row,col]) => {
+                newGrid[row][col] = 4
+            });
+            setGrid(newGrid)
+        } }>
             Find!
     </button>
     }
@@ -62,7 +90,7 @@ export default function Path() {
             </Head>
             <ResetButton />
             <FindPathButton />
-            <div className={styles.container}>{grid.map((row, colIndex) => <div key={colIndex}>{row.map((elem, rowIndex) => <Box key={rowIndex * 1000 + colIndex} state={elem} row={rowIndex} col={colIndex} />)}</div>)}</div>
+            <div className={styles.container}>{grid.map((row, colIndex) => <div>{row.map((elem, rowIndex) => <Box state={elem} row={colIndex} col={rowIndex} />)}</div>)}</div>
         </Layout>
     )
 }
