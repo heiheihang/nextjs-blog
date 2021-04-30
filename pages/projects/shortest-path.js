@@ -3,8 +3,77 @@ import Layout, { siteTitle } from '../../components/layout'
 import Head from 'next/head'
 
 import styles from '../../components/grid.module.css'
+import { path } from 'd3-path';
 
 const arraySize = 10
+
+function dijkstra(mat) {
+    let cnt = 0
+    let visited = new Array(arraySize).fill(0).map(() => new Array(arraySize).fill(0))
+    let distance = new Array(arraySize).fill(0).map(() => new Array(arraySize).fill(10000))
+    let prevNode = new Array(arraySize).fill(0).map(() => new Array(arraySize).fill([0,0]))
+    console.log("prevNode")
+    console.log(prevNode)
+    distance[0][0] = 0
+    while(cnt < arraySize * arraySize) {
+        let minDist = 10000
+        let [x,y] = [0,0]
+        for(let i = 0; i < arraySize; i++) {
+            for(let j = 0; j < arraySize; j++) {
+                if(visited[i][j] == 0 && distance[i][j] < minDist) {
+                    minDist = distance[i][j]
+                    x = i 
+                    y = j 
+                }
+            }
+        }
+        if(mat[x][y] == 1) {
+            visited[x][y] = 1
+            cnt++
+            continue
+        }
+        if(x > 0) {
+            if(distance[x-1][y] > distance[x][y] + 1 && mat[x-1][y] != 1) {
+                distance[x-1][y] = distance[x][y] + 1
+                prevNode[x-1][y] = [x,y]
+            }
+        }
+        if(x < arraySize - 1) {
+            if(distance[x+1][y] > distance[x][y] + 1 && mat[x+1][y] != 1) {
+                distance[x+1][y] = distance[x][y] + 1
+                prevNode[x+1][y] = [x,y]
+            }
+        }
+        if(y > 0) {
+            if(distance[x][y-1] > distance[x][y] + 1 && mat[x][y-1] != 1) {
+                distance[x][y-1] = distance[x][y] + 1
+                prevNode[x][y-1] = [x,y]
+            }
+        }
+        if(y < arraySize - 1) {
+            if(distance[x][y+1] > distance[x][y] + 1 && mat[x][y+1] != 1) {
+                distance[x][y+1] = distance[x][y] + 1
+                prevNode[x][y+1] = [x,y]
+            }
+        }
+        visited[x][y] = 1
+        cnt++
+    }
+    console.log(distance)
+    let path = []
+    let prev = prevNode[arraySize-1][arraySize-1]
+     while(prev != [0,0]) {
+        let [a,b] = prev 
+        if(a == 0 && b == 0){
+            break
+        }
+        console.log(prev)
+        path.push([a,b])
+        prev = prevNode[a][b]
+    } 
+    console.log("finished")
+    return path
+}
 
 function depthFirstSearch(mat) {
     const stack = []
@@ -149,6 +218,19 @@ export default function Path() {
         }}> Breadth First Search </button>
     }
 
+    function DijkstraButton() {
+        return <button onClick = {() => {
+            let path = dijkstra(grid)
+            console.log(path)
+            let newGrid = grid.map(row => row.slice()) 
+            console.log("finished")
+            path.forEach(([row,col]) => {
+                newGrid[row][col] = 4
+            });
+            setGrid(newGrid)
+        }}>Dijkstra</button>
+    }
+
     return (
         <Layout>
             <Head>
@@ -157,6 +239,7 @@ export default function Path() {
             <ResetButton />
             <FindPathButton />
             <BreadthFirstSearchButton />
+            <DijkstraButton/>
             <div className={styles.container}>{grid.map((row, colIndex) => <div>{row.map((elem, rowIndex) => <Box state={elem} row={colIndex} col={rowIndex} />)}</div>)}</div>
         </Layout>
     )
