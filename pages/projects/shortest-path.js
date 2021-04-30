@@ -30,6 +30,38 @@ function depthFirstSearch(mat) {
     }
 }
 
+function breathFirstSearch(mat) {
+    const queue = []
+    queue.push([0,0,[[0,0]]])
+    let visited = new Array(arraySize).fill(0).map(() => new Array(arraySize).fill(0))
+    while(queue.length > 0) {
+        console.log(queue)
+        let [row, col, path] = queue.shift()
+        if(mat[row][col] == 3) {
+            return path
+        }
+        if(mat[row][col] == 1) {
+            continue
+        }
+        if(row < arraySize - 1) {
+            if(visited[row+1][col] == 0) {
+                let queue1 = path.slice()
+                queue1.push([row+1, col])
+                queue.push([row + 1, col, queue1])
+                visited[row+1][col] = 1
+            }  
+        }
+        if(col < arraySize - 1) {
+            if(visited[row][col+1] == 0) {
+                let queue2 = path.slice()
+                queue2.push([row, col+1])
+                queue.push([row, col + 1, queue2])
+                visited[row][col+1] = 1
+            }
+        }
+    }
+}
+
 export default function Path() {
     const startingMatrix = new Array(arraySize).fill(0).map(() => new Array(arraySize).fill(0))
     startingMatrix[0][0] = 2
@@ -79,8 +111,21 @@ export default function Path() {
             });
             setGrid(newGrid)
         } }>
-            Find!
+            Depth First Search
     </button>
+    }
+
+    function BreathFirstSearchButton() {
+        return <button onClick={() => {
+            let path = breathFirstSearch(grid)
+            console.log(path)
+            let newGrid = grid.map(row => row.slice()) 
+            console.log("finished")
+            path.forEach(([row,col]) => {
+                newGrid[row][col] = 4
+            });
+            setGrid(newGrid)
+        }}> Breath First Search </button>
     }
 
     return (
@@ -90,6 +135,7 @@ export default function Path() {
             </Head>
             <ResetButton />
             <FindPathButton />
+            <BreathFirstSearchButton />
             <div className={styles.container}>{grid.map((row, colIndex) => <div>{row.map((elem, rowIndex) => <Box state={elem} row={colIndex} col={rowIndex} />)}</div>)}</div>
         </Layout>
     )
