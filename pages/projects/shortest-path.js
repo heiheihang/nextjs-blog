@@ -8,6 +8,7 @@ const arraySize = 10
 
 function depthFirstSearch(mat) {
     const stack = []
+    let visited = new Array(arraySize).fill(0).map(() => new Array(arraySize).fill(0))
     stack.push([0,0,[[0,0]]])
     while(stack.length > 0) {
         let [row, col, path] = stack.pop()
@@ -27,10 +28,14 @@ function depthFirstSearch(mat) {
             path2.push([row, col+1])
             stack.push([row, col + 1, path2 ])
         }
+        if(row > 0) {
+            let path1 = path.slice()
+            
+        }
     }
 }
 
-function breathFirstSearch(mat) {
+function breadthFirstSearch(mat) {
     const queue = []
     queue.push([0,0,[[0,0]]])
     let visited = new Array(arraySize).fill(0).map(() => new Array(arraySize).fill(0))
@@ -57,6 +62,22 @@ function breathFirstSearch(mat) {
                 queue2.push([row, col+1])
                 queue.push([row, col + 1, queue2])
                 visited[row][col+1] = 1
+            }
+        }
+        if(row > 0) {
+            if(visited[row-1][col] == 0) {
+                let queue1 = path.slice()
+                queue1.push([row-1,col])
+                queue.push([row-1, col, queue1])
+                visited[row-1][col]
+            }
+        }
+        if(col > 0) {
+            if(visited[row][col-1]) {
+                let queue2 = path.slice()
+                queue1.push([row,col-1])
+                queue.push([row,col-1,queue1])
+                visited[row][col-1]
             }
         }
     }
@@ -115,9 +136,9 @@ export default function Path() {
     </button>
     }
 
-    function BreathFirstSearchButton() {
+    function BreadthFirstSearchButton() {
         return <button onClick={() => {
-            let path = breathFirstSearch(grid)
+            let path = breadthFirstSearch(grid)
             console.log(path)
             let newGrid = grid.map(row => row.slice()) 
             console.log("finished")
@@ -125,7 +146,7 @@ export default function Path() {
                 newGrid[row][col] = 4
             });
             setGrid(newGrid)
-        }}> Breath First Search </button>
+        }}> Breadth First Search </button>
     }
 
     return (
@@ -135,7 +156,7 @@ export default function Path() {
             </Head>
             <ResetButton />
             <FindPathButton />
-            <BreathFirstSearchButton />
+            <BreadthFirstSearchButton />
             <div className={styles.container}>{grid.map((row, colIndex) => <div>{row.map((elem, rowIndex) => <Box state={elem} row={colIndex} col={rowIndex} />)}</div>)}</div>
         </Layout>
     )
