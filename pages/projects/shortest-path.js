@@ -31,8 +31,6 @@ function aStar(mat) {
 
         if (x > 0) {
             if (mat[x - 1][y] != 1) {
-
-
                 let inClose = false
                 let newHeuristicDistance = ((arraySize - 1) - (x - 1)) + ((arraySize - 1) - y)
                 for (let i = 0; i < close.length; i++) {
@@ -72,8 +70,6 @@ function aStar(mat) {
 
         if (x < arraySize - 1) {
             if (mat[x + 1][y] != 1) {
-
-
                 let newHeuristicDistance = ((arraySize - 1) - (x + 1)) + ((arraySize - 1) - y)
                 let inClose = false
                 for (let i = 0; i < close.length; i++) {
@@ -113,8 +109,6 @@ function aStar(mat) {
 
         if (y > 0) {
             if (mat[x][y - 1] != 1) {
-
-
                 let inClose = false
                 let newHeuristicDistance = ((arraySize - 1) - x) + ((arraySize - 1) - (y - 1))
                 for (let i = 0; i < close.length; i++) {
@@ -153,8 +147,6 @@ function aStar(mat) {
         }
         if (y < arraySize - 1) {
             if (mat[x][y + 1] != 1) {
-
-
                 let inClose = false
                 let newHeuristicDistance = ((arraySize - 1) - x) + ((arraySize - 1) - (y + 1))
                 for (let i = 0; i < close.length; i++) {
@@ -189,7 +181,7 @@ function aStar(mat) {
                         open.push([x, y + 1, g + 1, newHeuristicDistance + g + 1, path1])
                     }
                 }
-            } 
+            }
         }
     }
     console.log("no route")
@@ -288,7 +280,6 @@ function depthFirstSearch(mat) {
         }
         if (row > 0) {
             let path1 = path.slice()
-
         }
     }
 }
@@ -333,8 +324,8 @@ function breadthFirstSearch(mat) {
         if (col > 0) {
             if (visited[row][col - 1]) {
                 let queue2 = path.slice()
-                queue1.push([row, col - 1])
-                queue.push([row, col - 1, queue1])
+                queue2.push([row, col - 1])
+                queue.push([row, col - 1, queue2])
                 visited[row][col - 1]
             }
         }
@@ -347,6 +338,52 @@ export default function Path() {
     startingMatrix[arraySize - 1][arraySize - 1] = 3
     const [grid, setGrid] = useState(startingMatrix)
 
+    function depthFirstSearch(mat) {
+        const stack = []
+        let visited = new Array(arraySize).fill(0).map(() => new Array(arraySize).fill(0))
+        stack.push([0, 0, [[0, 0]]])
+        while (stack.length > 0) {
+            let [row, col, path] = stack.pop()
+
+            if (mat[row][col] == 3) {
+                return path
+            }
+            if (mat[row][col] == 1 || mat[row][col] == 5) {
+                continue
+            }
+            mat[row][col] = 5
+            console.log(mat)
+            
+            if (row > 0) {
+                if (mat[row - 1][col] != 5) {
+                    let path1 = path.slice()
+                    path1.push([row - 1, col])
+                    stack.push([row - 1, col, path1])
+                }
+            }
+            if (col > 0) {
+                if (mat[row][col - 1] != 5) {
+                    let path1 = path.slice()
+                    path1.push([row, col - 1])
+                    stack.push([row, col - 1, path1])
+                }
+            }
+            if (row < arraySize - 1) {
+                if (mat[row + 1][col] != 5) {
+                    let path1 = path.slice()
+                    path1.push([row + 1, col])
+                    stack.push([row + 1, col, path1])
+                }
+            }
+            if (col < arraySize - 1) {
+                if (mat[row][col + 1] != 5) {
+                    let path1 = path.slice()
+                    path1.push([row, col + 1])
+                    stack.push([row, col + 1, path1])
+                }
+            }
+        }
+    }
     function Box({ state, row, col }) {
         const [boxState, setBoxState] = useState(state)
         if (boxState == 0) {   //default state
@@ -369,6 +406,8 @@ export default function Path() {
             return <div className={styles.end}></div>
         } else if (boxState == 4) {
             return <div className={styles.path}></div>
+        } else if (boxState == 5) {
+            return <div className={styles.visited}></div>
         }
     }
 
@@ -388,6 +427,7 @@ export default function Path() {
             path.forEach(([row, col]) => {
                 newGrid[row][col] = 4
             });
+            console.log(newGrid)
             setGrid(newGrid)
         }}>
             Depth First Search

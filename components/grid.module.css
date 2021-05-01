@@ -38,3 +38,10 @@
     height: 100px;
     border: solid;
 }
+
+.visited {
+    background-color: rgb(29, 89, 104);
+    width:100px;
+    height: 100px;
+    border: solid;
+}
