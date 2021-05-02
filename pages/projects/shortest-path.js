@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Layout, { siteTitle } from '../../components/layout'
+import Layout2, { siteTitle } from '../../components/layout2'
 import Head from 'next/head'
 
 import styles from '../../components/grid.module.css'
@@ -291,43 +291,36 @@ function breadthFirstSearch(mat) {
     while (queue.length > 0) {
         console.log(queue)
         let [row, col, path] = queue.shift()
+        
         if (mat[row][col] == 3) {
+            console.log(path)
             return path
         }
-        if (mat[row][col] == 1) {
+        if (mat[row][col] == 1 || mat[row][col] == 5) {
             continue
         }
-        if (row < arraySize - 1) {
-            if (visited[row + 1][col] == 0) {
-                let queue1 = path.slice()
-                queue1.push([row + 1, col])
-                queue.push([row + 1, col, queue1])
-                visited[row + 1][col] = 1
-            }
-        }
-        if (col < arraySize - 1) {
-            if (visited[row][col + 1] == 0) {
-                let queue2 = path.slice()
-                queue2.push([row, col + 1])
-                queue.push([row, col + 1, queue2])
-                visited[row][col + 1] = 1
-            }
-        }
+        mat[row][col] = 5
         if (row > 0) {
-            if (visited[row - 1][col] == 0) {
-                let queue1 = path.slice()
-                queue1.push([row - 1, col])
-                queue.push([row - 1, col, queue1])
-                visited[row - 1][col]
-            }
+
+            let queue1 = path.slice()
+            queue1.push([row - 1, col])
+            queue.push([row - 1, col, queue1])
+
         }
         if (col > 0) {
-            if (visited[row][col - 1]) {
-                let queue2 = path.slice()
-                queue2.push([row, col - 1])
-                queue.push([row, col - 1, queue2])
-                visited[row][col - 1]
-            }
+            let queue2 = path.slice()
+            queue2.push([row, col - 1])
+            queue.push([row, col - 1, queue2])
+        }
+        if (row < arraySize - 1) {
+            let queue1 = path.slice()
+            queue1.push([row + 1, col])
+            queue.push([row + 1, col, queue1])
+        }
+        if (col < arraySize - 1) {
+            let queue2 = path.slice()
+            queue2.push([row, col + 1])
+            queue.push([row, col + 1, queue2])
         }
     }
 }
@@ -353,7 +346,7 @@ export default function Path() {
             }
             mat[row][col] = 5
             console.log(mat)
-            
+
             if (row > 0) {
                 if (mat[row - 1][col] != 5) {
                     let path1 = path.slice()
@@ -419,7 +412,7 @@ export default function Path() {
         </button>
     }
 
-    function FindPathButton() {
+    function DepthFirstSearchButton() {
         return <button onClick={() => {
             let path = depthFirstSearch(grid)
             let newGrid = grid.map(row => row.slice())
@@ -474,16 +467,16 @@ export default function Path() {
     }
 
     return (
-        <Layout>
+        <Layout2>
             <Head>
                 <title>Shortest Path</title>
             </Head>
             <ResetButton />
-            <FindPathButton />
+            <DepthFirstSearchButton />
             <BreadthFirstSearchButton />
             <DijkstraButton />
             <AStarButton />
             <div className={styles.container}>{grid.map((row, colIndex) => <div>{row.map((elem, rowIndex) => <Box state={elem} row={colIndex} col={rowIndex} />)}</div>)}</div>
-        </Layout>
+        </Layout2>
     )
 }
