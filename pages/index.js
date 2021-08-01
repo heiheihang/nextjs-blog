@@ -27,6 +27,9 @@ export default function Home({ allPostsData }) {
         He spent 4 years in University College London with a degree in Computer Science
           and Mathematics. He will be spending 1 year in Carnegie Mellon University to do a Masters in Software Engineering.
         </p>
+        <p>He has interned at Vectr Ventures as a software engineer. He is currently the technical cofounder of 
+        Parentvestment, also the sole developer/UX designer of the app incubated by Cyberport, Hong Kong. 
+        </p>
         <p>
           Some of his favorite technologies are:
         </p>
