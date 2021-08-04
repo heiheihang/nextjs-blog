@@ -25,7 +25,11 @@ export default function Home({ allPostsData }) {
         </p>
         <p>
         He spent 4 years in University College London with a degree in Computer Science
-          and Mathematics. He will be spending 1 year in Carnegie Mellon University to do a Masters in Software Engineering.
+          and Mathematics. In previous summers, he spent most of his time doing research with UCL's 
+          PPLV (Programming Principles, Logic, and Verification Group) on topics ranging from category theory,
+          FSA, Buchi Arithmetic, Expressiveness of Algebraic Group etc.
+          
+          <p>After discovering the joy of software engineering, he will be spending 1 year in Carnegie Mellon University to do a Masters in Software Engineering.</p>
         </p>
         <p>He has interned at Vectr Ventures as a software engineer. He is currently the technical cofounder of 
         Parentvestment, also the sole developer/UX designer of the app incubated by Cyberport, Hong Kong. 
@@ -37,11 +41,22 @@ export default function Home({ allPostsData }) {
           <li>ReScript</li>
           <li>React</li>
           <li>Flutter</li>
+          <li>Python/Django</li>
+          <li>Node/Express</li>
+          <li>Docker</li>
+          <li>AWS/GCP</li>
           <li>Next.js</li>
+
+
         </ul>
       </section>
       <section>
-        <Link href="/projects/shortest-path">Pathfinding Visualizer</Link>
+        <h2>Toy Projects</h2>
+        <p><Link href="/projects/shortest-path">Pathfinding Visualizer</Link></p>
+
+        <p><Link href="https://github.com/LCHK-Side-Project/Study-Paxos">Study Paxos</Link></p>
+
+        <p><Link href="https://github.com/heiheihang/Grading-Server-Test">Codeforces Clone</Link></p>
       </section>
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
         <h2 className={utilStyles.headingLg}>Blog</h2>
